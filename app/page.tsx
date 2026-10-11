@@ -4,6 +4,13 @@ import { useState, type FormEvent, type KeyboardEvent } from "react";
 
 type Status = "idle" | "loading" | "error" | "ready";
 
+// Подсказки-примеры: клик заполняет поле и сразу запускает генерацию
+const EXAMPLES = [
+  "Кот в новогоднем свитере, акварель",
+  "«С днём рождения», воздушные шары, флэт-вектор",
+  "Ночный город в дождь, неоновые отблески",
+];
+
 export default function Home() {
   const [prompt, setPrompt] = useState("");
   const [status, setStatus] = useState<Status>("idle");
@@ -12,8 +19,11 @@ export default function Home() {
 
   const loading = status === "loading";
 
-  async function generate() {
-    const trimmed = prompt.trim();
+  // Текст передаётся аргументом: после setPrompt новое значение стейта
+  // в этой же функции недоступно (асинхронность React) — важно для чипов,
+  // которые заполняют поле и генерируют одним кликом.
+  async function generate(text: string) {
+    const trimmed = text.trim();
     if (!trimmed || loading) return;
 
     setStatus("loading");
@@ -42,13 +52,18 @@ export default function Home() {
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    void generate();
+    void generate(prompt);
+  }
+
+  function handleExample(example: string) {
+    setPrompt(example);
+    void generate(example);
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
     if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
       event.preventDefault();
-      void generate();
+      void generate(prompt);
     }
   }
 
@@ -73,6 +88,19 @@ export default function Home() {
             maxLength={1000}
             disabled={loading}
           />
+          <div className="examples">
+            {EXAMPLES.map((example) => (
+              <button
+                key={example}
+                type="button"
+                className="chip"
+                onClick={() => handleExample(example)}
+                disabled={loading}
+              >
+                {example}
+              </button>
+            ))}
+          </div>
           <div className="form-footer">
             <span className="hint">Ctrl + Enter — сгенерировать</span>
             <button className="button" type="submit" disabled={loading || !prompt.trim()}>
