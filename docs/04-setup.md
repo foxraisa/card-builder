@@ -70,10 +70,8 @@
 | Production-сборка | `npm run build` | `✓ Compiled successfully` (Next.js 16.4.0, Turbopack), TypeScript — без ошибок; маршруты: `/` (static), `/api/generate` (dynamic) |
 | Smoke-тест | `npm run start` + запрос к `http://localhost:3000` | HTTP 200, разметка страницы содержит ожидаемые элементы |
 
-## 6. Скриншоты для отчёта (снять и положить в `docs/screenshots/`)
+## 6. Скриншоты для отчёта (находятся в `docs/screenshots/`)
 
-Имена файлов — как в плейсхолдерах [REPORT.md](../REPORT.md): положите файлы с этими
-именами, и отчёт соберётся без правок.
 
 | # | Файл | Что снять |
 |---|---|---|
